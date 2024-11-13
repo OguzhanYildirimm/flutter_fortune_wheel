@@ -261,86 +261,99 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
       onFling: onFling,
       builder: (context, panState) {
         return Stack(
-          children: [
-              for (var it in indicators)
-              Positioned(
-                  top:-20,
-                  left:0,
-                  right:0,
-                  child: IgnorePointer(
-                child: Container(
-                  alignment: it.alignment,
-                  child: AnimatedBuilder(
-                    animation: arrowAnimation,
-                    builder: (context, child) {
-                      return Transform.translate(
-                        offset: Offset(0, arrowAnimation.value),
-                        child: child,
-                      );
-                    },
-                    child: it.child,
-                  ),
+  children: [
+    // Transparan alan ekliyoruz
+    Positioned.fill(
+      child: Container(
+        color: Colors.black.withOpacity(0.5), // Dış alanı yarı saydam siyah yapıyoruz
+      ),
+    ),
+    // Çarkı içeren ana alan
+    Positioned(
+      top: 50, // Çarkın üst konumunu belirleyin
+      left: 50, // Çarkın sol konumunu belirleyin
+      right: 50, // Çarkın sağ konumunu belirleyin
+      bottom: 50, // Çarkın alt konumunu belirleyin
+      child: AnimatedBuilder(
+        animation: rotateAnim,
+        builder: (context, _) {
+          final size = MediaQuery.of(context).size;
+          final meanSize = (size.width + size.height) / 2;
+          final panFactor = 6 / meanSize;
+
+          return LayoutBuilder(builder: (context, constraints) {
+            final wheelData = _WheelData(
+              constraints: constraints,
+              itemCount: items.length,
+              textDirection: Directionality.of(context),
+            );
+
+            final isAnimatingPanFactor = rotateAnimCtrl.isAnimating ? 0 : 1;
+            final selectedAngle =
+                -2 * _math.pi * (selectedIndex.value / items.length);
+            final panAngle =
+                panState.distance * panFactor * isAnimatingPanFactor;
+            final rotationAngle = _getAngle(rotateAnim.value);
+            final alignmentOffset = _calculateAlignmentOffset(alignment);
+            final totalAngle = selectedAngle + panAngle + rotationAngle;
+
+            final focusedIndex = _borderCross(
+              totalAngle,
+              lastVibratedAngle,
+              items.length,
+              hapticImpact,
+              _animateArrow,
+            );
+            if (focusedIndex != null) {
+              onFocusItemChanged?.call(focusedIndex % items.length);
+            }
+
+            final transformedItems = [
+              for (var i = 0; i < items.length; i++)
+                TransformedFortuneItem(
+                  item: items[i],
+                  angle: totalAngle +
+                      alignmentOffset +
+                      _calculateSliceAngle(i, items.length),
+                  offset: wheelData.offset,
                 ),
+            ];
+
+            return SizedBox.expand(
+              child: _CircleSlices(
+                items: transformedItems,
+                wheelData: wheelData,
+                styleStrategy: styleStrategy,
               ),
-              ),
-            AnimatedBuilder(
-              animation: rotateAnim,
-              builder: (context, _) {
-                final size = MediaQuery.of(context).size;
-                final meanSize = (size.width + size.height) / 2;
-                final panFactor = 6 / meanSize;
-
-                return LayoutBuilder(builder: (context, constraints) {
-                  final wheelData = _WheelData(
-                    constraints: constraints,
-                    itemCount: items.length,
-                    textDirection: Directionality.of(context),
-                  );
-
-                  final isAnimatingPanFactor =
-                      rotateAnimCtrl.isAnimating ? 0 : 1;
-                  final selectedAngle =
-                      -2 * _math.pi * (selectedIndex.value / items.length);
-                  final panAngle =
-                      panState.distance * panFactor * isAnimatingPanFactor;
-                  final rotationAngle = _getAngle(rotateAnim.value);
-                  final alignmentOffset = _calculateAlignmentOffset(alignment);
-                  final totalAngle = selectedAngle + panAngle + rotationAngle;
-
-                  final focusedIndex = _borderCross(
-                    totalAngle,
-                    lastVibratedAngle,
-                    items.length,
-                    hapticImpact,
-                    _animateArrow, // _tetikle fonksiyonunu burada geçiriyoruz
-                  );
-                  if (focusedIndex != null) {
-                    onFocusItemChanged?.call(focusedIndex % items.length);
-                  }
-
-                  final transformedItems = [
-                    for (var i = 0; i < items.length; i++)
-                      TransformedFortuneItem(
-                        item: items[i],
-                        angle: totalAngle +
-                            alignmentOffset +
-                            _calculateSliceAngle(i, items.length),
-                        offset: wheelData.offset,
-                      ),
-                  ];
-
-                  return SizedBox.expand(
-                    child: _CircleSlices(
-                      items: transformedItems,
-                      wheelData: wheelData,
-                      styleStrategy: styleStrategy,
-                    ),
-                  );
-                });
+            );
+          });
+        },
+      ),
+    ),
+    // Indicator widget'ı
+    for (var it in indicators)
+      Positioned(
+        top: -20,
+        left: 0,
+        right: 0,
+        child: IgnorePointer(
+          child: Container(
+            alignment: it.alignment,
+            child: AnimatedBuilder(
+              animation: arrowAnimation,
+              builder: (context, child) {
+                return Transform.translate(
+                  offset: Offset(0, arrowAnimation.value),
+                  child: child,
+                );
               },
+              child: it.child,
             ),
-          ],
-        );
+          ),
+        ),
+      ),
+  ],
+);
       },
     );
   }
