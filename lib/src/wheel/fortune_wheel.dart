@@ -266,7 +266,7 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
               animation: rotateAnim,
               builder: (context, _) {
                 final size = MediaQuery.of(context).size;
-                final meanSize = (size.width + size.height) / 2;
+                final meanSize = (size.width + size.height) / 1.5;
                 final panFactor = 6 / meanSize;
 
                 return LayoutBuilder(builder: (context, constraints) {
