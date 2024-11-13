@@ -35,8 +35,8 @@ class _TrianglePainter extends CustomPainter {
     // İçteki sarı üçgenin konumunu ve boyutunu küçültüyoruz
     final innerPath = Path()
       ..moveTo(size.width / 2, size.height * 0.1) // Daha yukarıya taşıyoruz
-      ..lineTo(size.width * 0.8, size.height * 0.95) // Kenarları daraltıyoruz
-      ..lineTo(size.width * 0.2, size.height * 0.95) // Kenarları daraltıyoruz
+      ..lineTo(size.width * 0.7, size.height * 0.95) // Kenarları daraltıyoruz
+      ..lineTo(size.width * 0.3, size.height * 0.95) // Kenarları daraltıyoruz
       ..close();
 
     canvas.drawPath(innerPath, fillPaint);
