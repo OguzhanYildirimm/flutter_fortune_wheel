@@ -52,12 +52,12 @@ class _TrianglePainter extends CustomPainter {
   }
 }
 
-class TriangleIndicator extends StatelessWidget {
+class _Triangle extends StatelessWidget {
   final Color fillColor;
   final Color backgroundColor;
   final double elevation;
 
-  const TriangleIndicator({
+  const _Triangle({
     required this.fillColor,
     required this.backgroundColor,
     this.elevation = 0,
