@@ -262,6 +262,27 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
       builder: (context, panState) {
         return Stack(
           children: [
+              for (var it in indicators)
+              Positioned(
+                  top:-20,
+                  left:0,
+                  right:0,
+                  child: IgnorePointer(
+                child: Container(
+                  alignment: it.alignment,
+                  child: AnimatedBuilder(
+                    animation: arrowAnimation,
+                    builder: (context, child) {
+                      return Transform.translate(
+                        offset: Offset(0, arrowAnimation.value),
+                        child: child,
+                      );
+                    },
+                    child: it.child,
+                  ),
+                ),
+              ),
+              ),
             AnimatedBuilder(
               animation: rotateAnim,
               builder: (context, _) {
@@ -318,27 +339,6 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
                 });
               },
             ),
-            for (var it in indicators)
-              Positioned(
-                  top:-20,
-                  left:0,
-                  right:0,
-                  child: IgnorePointer(
-                child: Container(
-                  alignment: it.alignment,
-                  child: AnimatedBuilder(
-                    animation: arrowAnimation,
-                    builder: (context, child) {
-                      return Transform.translate(
-                        offset: Offset(0, arrowAnimation.value),
-                        child: child,
-                      );
-                    },
-                    child: it.child,
-                  ),
-                ),
-              ),
-              ),
           ],
         );
       },
