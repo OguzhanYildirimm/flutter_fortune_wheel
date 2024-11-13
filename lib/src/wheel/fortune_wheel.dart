@@ -5,11 +5,11 @@ enum HapticImpact { none, light, medium, heavy }
 Offset _calculateWheelOffset(
     BoxConstraints constraints, TextDirection textDirection) {
   final smallerSide = getSmallerSide(constraints);
-  var offsetX = constraints.maxWidth / 2;
+  var offsetX = constraints.maxWidth / 1.5;
   if (textDirection == TextDirection.rtl) {
     offsetX = offsetX * -1 + smallerSide / 2;
   }
-  return Offset(offsetX, constraints.maxHeight / 2);
+  return Offset(offsetX, constraints.maxHeight / 1.5);
 }
 
 double _calculateSliceAngle(int index, int itemCount) {
@@ -266,7 +266,7 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
               animation: rotateAnim,
               builder: (context, _) {
                 final size = MediaQuery.of(context).size;
-                final meanSize = (size.width + size.height) / 1.5;
+                final meanSize = (size.width + size.height) / 2;
                 final panFactor = 6 / meanSize;
 
                 return LayoutBuilder(builder: (context, constraints) {
