@@ -1,7 +1,8 @@
 part of 'indicators.dart';
 
 class TriangleIndicator extends StatelessWidget {
-  final Color? color;
+  final Color? color; // İçteki üçgenin rengi
+  final Color? backgroundColor; // Arka plandaki üçgenin rengi
   final double width;
   final double height;
   final double elevation;
@@ -9,6 +10,7 @@ class TriangleIndicator extends StatelessWidget {
   const TriangleIndicator({
     Key? key,
     this.color,
+    this.backgroundColor,
     this.width = 36.0,
     this.height = 36.0,
     this.elevation = 2,
@@ -23,10 +25,12 @@ class TriangleIndicator extends StatelessWidget {
         width: width,
         height: height,
         child: _Triangle(
-          color: color ?? theme.colorScheme.secondary,
+          fillColor: color ?? theme.colorScheme.secondary,
+          backgroundColor: backgroundColor ?? Colors.red,
           elevation: elevation,
         ),
       ),
     );
   }
 }
+
