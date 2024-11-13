@@ -40,6 +40,7 @@ class RectangleIndicator extends StatelessWidget {
               height: height / 10,
               child: _Triangle(
                 fillColor: borderColor,
+                backgroundColor: borderColor
               ),
             ),
           ),
@@ -52,6 +53,7 @@ class RectangleIndicator extends StatelessWidget {
                 height: height / 10,
                 child: _Triangle(
                   fillColor: borderColor,
+                  backgroundColor: borderColor
                 ),
               ),
             ),
