@@ -321,6 +321,8 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
             for (var it in indicators)
               Positioned(
                   top:20,
+                  left:0,
+                  right:0
                   child: IgnorePointer(
                 child: Container(
                   alignment: it.alignment,
