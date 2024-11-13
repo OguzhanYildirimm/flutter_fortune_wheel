@@ -32,11 +32,11 @@ class _TrianglePainter extends CustomPainter {
     canvas.drawShadow(path, Colors.black, elevation, true);
     canvas.drawPath(path, backgroundPaint);
 
-    // İçteki sarı üçgen için boyutları küçültüyoruz
+    // İçteki sarı üçgenin konumunu ve boyutunu küçültüyoruz
     final innerPath = Path()
-      ..moveTo(size.width / 2, size.height * 0.1)
-      ..lineTo(size.width * 0.85, size.height * 0.9)
-      ..lineTo(size.width * 0.15, size.height * 0.9)
+      ..moveTo(size.width / 2, size.height * 0.2) // Daha yukarıya taşıyoruz
+      ..lineTo(size.width * 0.7, size.height * 0.8) // Kenarları daraltıyoruz
+      ..lineTo(size.width * 0.3, size.height * 0.8) // Kenarları daraltıyoruz
       ..close();
 
     canvas.drawPath(innerPath, fillPaint);
