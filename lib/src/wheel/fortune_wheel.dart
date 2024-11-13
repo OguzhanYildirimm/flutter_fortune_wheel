@@ -261,81 +261,40 @@ class FortuneWheel extends HookWidget implements FortuneWidget {
       onFling: onFling,
       builder: (context, panState) {
         return Stack(
+  alignment: Alignment.center, // Çarkı merkeze hizalamak için
   children: [
-    // Transparan alan ekliyoruz
-    Positioned.fill(
-      child: Container(
-        color: Colors.black.withOpacity(0.5), // Dış alanı yarı saydam siyah yapıyoruz
-      ),
-    ),
     // Çarkı içeren ana alan
-    Positioned(
-      top: 50, // Çarkın üst konumunu belirleyin
-      left: 50, // Çarkın sol konumunu belirleyin
-      right: 50, // Çarkın sağ konumunu belirleyin
-      bottom: 50, // Çarkın alt konumunu belirleyin
-      child: AnimatedBuilder(
-        animation: rotateAnim,
-        builder: (context, _) {
-          final size = MediaQuery.of(context).size;
-          final meanSize = (size.width + size.height) / 2;
-          final panFactor = 6 / meanSize;
+    LayoutBuilder(builder: (context, constraints) {
+      final wheelData = _WheelData(
+        constraints: constraints,
+        itemCount: items.length,
+        textDirection: Directionality.of(context),
+      );
 
-          return LayoutBuilder(builder: (context, constraints) {
-            final wheelData = _WheelData(
-              constraints: constraints,
-              itemCount: items.length,
-              textDirection: Directionality.of(context),
-            );
-
-            final isAnimatingPanFactor = rotateAnimCtrl.isAnimating ? 0 : 1;
-            final selectedAngle =
-                -2 * _math.pi * (selectedIndex.value / items.length);
-            final panAngle =
-                panState.distance * panFactor * isAnimatingPanFactor;
-            final rotationAngle = _getAngle(rotateAnim.value);
-            final alignmentOffset = _calculateAlignmentOffset(alignment);
-            final totalAngle = selectedAngle + panAngle + rotationAngle;
-
-            final focusedIndex = _borderCross(
-              totalAngle,
-              lastVibratedAngle,
-              items.length,
-              hapticImpact,
-              _animateArrow,
-            );
-            if (focusedIndex != null) {
-              onFocusItemChanged?.call(focusedIndex % items.length);
-            }
-
-            final transformedItems = [
-              for (var i = 0; i < items.length; i++)
-                TransformedFortuneItem(
-                  item: items[i],
-                  angle: totalAngle +
-                      alignmentOffset +
-                      _calculateSliceAngle(i, items.length),
-                  offset: wheelData.offset,
-                ),
-            ];
-
-            return SizedBox.expand(
-              child: _CircleSlices(
-                items: transformedItems,
-                wheelData: wheelData,
-                styleStrategy: styleStrategy,
-              ),
-            );
-          });
-        },
-      ),
-    ),
-    // Indicator widget'ı
+      return Stack(
+        alignment: Alignment.center,
+        children: [
+          SizedBox.expand(
+            child: _CircleSlices(
+              items: [
+                for (var i = 0; i < items.length; i++)
+                  TransformedFortuneItem(
+                    item: items[i],
+                    angle: _calculateSliceAngle(i, items.length),
+                    offset: wheelData.offset,
+                  ),
+              ],
+              wheelData: wheelData,
+              styleStrategy: styleStrategy,
+            ),
+          ),
+        ],
+      );
+    }),
+    // Indicator widget'ı, LayoutBuilder dışına yerleştirildi
     for (var it in indicators)
       Positioned(
-        top: -20,
-        left: 0,
-        right: 0,
+        top: 20, // Yüksekliği gerektiği gibi ayarlayın
         child: IgnorePointer(
           child: Container(
             alignment: it.alignment,
